@@ -75,8 +75,6 @@ export default function TextToSpeech() {
     };
 
     speechSynthesis.speak(newUtterance);
-    // Remove or use `utterance` appropriately
-    // setUtterance(newUtterance);
   };
 
 // Specify a more precise type for the event parameter
