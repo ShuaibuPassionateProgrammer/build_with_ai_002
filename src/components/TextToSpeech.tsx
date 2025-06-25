@@ -67,23 +67,26 @@ const TextToSpeech: React.FC = () => {
   };
 
   return (
-    <div className="max-w-xl mx-auto p-8 bg-gray-800 bg-opacity-60 backdrop-blur-md rounded-xl shadow-lg text-white">
-      <h1 className="text-4xl font-extrabold mb-6 text-center drop-shadow-lg">Text to Speech</h1>
-      <textarea
-        //className="w-full p-4 rounded-lg text-gray-900 text-lg resize-none shadow-inner focus:outline-none focus:ring-4 focus:ring-purple-300 border-blue-700"
-        className="w-full p-4 rounded-xl text-gray-100 text-lg resize-none shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-40 transition-all duration-300 border-2 border-gray-300 hover:border-indigo-500 active:border-indigo-600"
-        rows={6}
-        placeholder="Enter text here..."
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-      />
+    <div className="max-w-xl w-full mx-auto p-6 sm:p-8 bg-gray-800 bg-opacity-60 backdrop-blur-md rounded-xl shadow-lg text-white">
       <div className="mt-6">
-        <label htmlFor="voice" className="block mb-2 font-semibold text-lg">
+        <label htmlFor="voice" className="block mb-2 font-semibold text-base sm:text-lg">
+          Enter some text:
+        </label>
+        <textarea
+          className="w-full p-4 rounded-xl text-gray-100 text-base sm:text-lg resize-none shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-40 transition-all duration-300 border-2 border-gray-300 hover:border-indigo-500 active:border-indigo-600"
+          rows={6}
+          placeholder="Enter text here..."
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+        />
+      </div>
+      <div className="mt-6">
+        <label htmlFor="voice" className="block mb-2 font-semibold text-base sm:text-lg">
           Select Voice:
         </label>
         <select
           id="voice"
-          className="w-full p-3 rounded-lg text-gray-900 text-lg shadow-inner focus:outline-none focus:ring-4 focus:ring-purple-300"
+          className="w-full p-3 rounded-lg text-base sm:text-lg shadow-inner focus:outline-none focus:ring-4 focus:ring-purple-300 border-2 border-gray-300 hover:border-indigo-500 active:border-indigo-600"
           value={selectedVoice}
           onChange={handleVoiceChange}
         >
@@ -94,9 +97,9 @@ const TextToSpeech: React.FC = () => {
           ))}
         </select>
       </div>
-      <div className="mt-8 flex justify-center space-x-6">
+      <div className="mt-8 flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6">
         <button
-          className="bg-white text-indigo-700 font-bold py-3 px-6 rounded-lg shadow-md hover:bg-indigo-100 disabled:opacity-50 transition duration-300"
+          className="w-full sm:w-auto bg-white text-indigo-700 font-bold py-3 px-6 rounded-lg shadow-md hover:bg-indigo-100 disabled:opacity-50 transition duration-300"
           onClick={speak}
           disabled={isSpeaking && !isPaused}
           title="Listen"
@@ -104,7 +107,7 @@ const TextToSpeech: React.FC = () => {
           ▶️ Listen
         </button>
         <button
-          className="bg-white text-indigo-700 font-bold py-3 px-6 rounded-lg shadow-md hover:bg-indigo-100 disabled:opacity-50 transition duration-300"
+          className="w-full sm:w-auto bg-white text-indigo-700 font-bold py-3 px-6 rounded-lg shadow-md hover:bg-indigo-100 disabled:opacity-50 transition duration-300"
           onClick={togglePause}
           disabled={!isSpeaking}
           title={isPaused ? "Resume" : "Pause"}
@@ -112,7 +115,7 @@ const TextToSpeech: React.FC = () => {
           {isPaused ? '▶️ Resume' : '⏸️ Pause'}
         </button>
         <button
-          className="bg-white text-indigo-700 font-bold py-3 px-6 rounded-lg shadow-md hover:bg-indigo-100 disabled:opacity-50 transition duration-300"
+          className="w-full sm:w-auto bg-white text-indigo-700 font-bold py-3 px-6 rounded-lg shadow-md hover:bg-indigo-100 disabled:opacity-50 transition duration-300"
           onClick={stop}
           disabled={!isSpeaking}
           title="Stop"
