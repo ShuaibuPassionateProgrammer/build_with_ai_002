@@ -6,7 +6,7 @@ export default function Home() {
     <div className="min-h-screen p-8 flex flex-col items-center justify-center bg-gradient-to-br from-gray-800 to-black">
       <h1 className="text-4xl font-bold mb-8 text-white text-center">Text-to-Speech AI System</h1>
       <TextToSpeech />
-      <footer className="mt-12 py-10 bg-gradient-to-r from-blue-500 to-indigo-600 text-center text-white rounded-t-3xl shadow-xl">
+      <footer className="w-full mt-12 py-10 bg-gradient-to-r from-blue-500 to-indigo-600 text-center text-white rounded-t-3xl shadow-xl">
         <div className="max-w-3xl mx-auto">
           <p className="text-lg font-semibold">
             This project was created during the Google Developer Group (GDG) event in Jalingo, Taraba State, Nigeria, as part of the
