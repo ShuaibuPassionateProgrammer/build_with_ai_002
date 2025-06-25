@@ -67,10 +67,11 @@ const TextToSpeech: React.FC = () => {
   };
 
   return (
-    <div className="max-w-xl mx-auto p-8 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-xl shadow-lg text-white">
+    <div className="max-w-xl mx-auto p-8 bg-gray-800 bg-opacity-60 backdrop-blur-md rounded-xl shadow-lg text-white">
       <h1 className="text-4xl font-extrabold mb-6 text-center drop-shadow-lg">Text to Speech</h1>
       <textarea
-        className="w-full p-4 rounded-lg text-gray-900 text-lg resize-none shadow-inner focus:outline-none focus:ring-4 focus:ring-purple-300"
+        //className="w-full p-4 rounded-lg text-gray-900 text-lg resize-none shadow-inner focus:outline-none focus:ring-4 focus:ring-purple-300 border-blue-700"
+        className="w-full p-4 rounded-xl text-gray-100 text-lg resize-none shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-40 transition-all duration-300 border-2 border-gray-300 hover:border-indigo-500 active:border-indigo-600"
         rows={6}
         placeholder="Enter text here..."
         value={text}
