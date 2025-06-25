@@ -70,7 +70,7 @@ const TextToSpeech: React.FC = () => {
     <div className="max-w-xl w-full mx-auto p-6 sm:p-8 bg-gray-800 bg-opacity-60 backdrop-blur-md rounded-xl shadow-lg text-white">
       <div className="mt-6">
         <label htmlFor="voice" className="block mb-2 font-semibold text-base sm:text-lg">
-          Enter some text:
+          Enter Text:
         </label>
         <textarea
           className="w-full p-4 rounded-xl text-gray-100 text-base sm:text-lg resize-none shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-40 transition-all duration-300 border-2 border-gray-300 hover:border-indigo-500 active:border-indigo-600"
