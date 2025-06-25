@@ -75,7 +75,14 @@ export default function TextToSpeech() {
     };
 
     speechSynthesis.speak(newUtterance);
-    setUtterance(newUtterance);
+    // Remove or use `utterance` appropriately
+    // setUtterance(newUtterance);
+  };
+
+// Specify a more precise type for the event parameter
+const handleVoiceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newIndex = parseInt(e.target.value);
+    setSelectedVoiceIndex(newIndex);
   };
 
   const togglePause = () => {
@@ -95,11 +102,6 @@ export default function TextToSpeech() {
     setIsSpeaking(false);
     setIsPaused(false);
     setUtterance(null);
-  };
-
-  const handleVoiceChange = (e: any) => {
-    const newIndex = parseInt(e.target.value);
-    setSelectedVoiceIndex(newIndex);
   };
 
   return (
