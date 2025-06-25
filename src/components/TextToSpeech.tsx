@@ -5,155 +5,134 @@ import { useState, useEffect } from 'react';
 export default function TextToSpeech() {
   const [text, setText] = useState('');
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
-  const [selectedVoice, setSelectedVoice] = useState<string>('');
+  const [selectedVoice, setSelectedVoice] = useState<SpeechSynthesisVoice | null>(null);
   const [isPaused, setIsPaused] = useState(false);
   const [utterance, setUtterance] = useState<SpeechSynthesisUtterance | null>(null);
-  const [speaking, setSpeaking] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
 
-  // Load available voices when component mounts
   useEffect(() => {
-    const synth = window.speechSynthesis;
-    
-    // Function to load and set available voices
     const loadVoices = () => {
-      const availableVoices = synth.getVoices();
+      const availableVoices = speechSynthesis.getVoices();
       setVoices(availableVoices);
-      
-      // Set default voice (first one)
       if (availableVoices.length > 0) {
-        setSelectedVoice(availableVoices[0].name);
+        setSelectedVoice(availableVoices[0]);
       }
     };
 
-    // Load voices initially
-    loadVoices();
-    
-    // Chrome loads voices asynchronously, so we need this event
-    if (synth.onvoiceschanged !== undefined) {
-      synth.onvoiceschanged = loadVoices;
+    // Load voices when they are ready
+    if (speechSynthesis.onvoiceschanged !== undefined) {
+      speechSynthesis.onvoiceschanged = loadVoices;
+    } else {
+      loadVoices(); // Fallback for browsers that don't fire onvoiceschanged
     }
 
-    // Cleanup function
     return () => {
-      if (synth.speaking) {
-        synth.cancel();
-      }
+      speechSynthesis.onvoiceschanged = null;
     };
   }, []);
 
-  // Handle speech synthesis
   const speak = () => {
-    const synth = window.speechSynthesis;
-    
-    // Cancel any ongoing speech
-    if (synth.speaking) {
-      synth.cancel();
-    }
+    if (text.trim() === '') return;
 
-    // Create a new utterance with the input text
     const newUtterance = new SpeechSynthesisUtterance(text);
-    
-    // Set the selected voice
-    const voice = voices.find(v => v.name === selectedVoice);
-    if (voice) {
-      newUtterance.voice = voice;
-    }
+    newUtterance.voice = selectedVoice;
+    newUtterance.onstart = () => setIsSpeaking(true);
+    newUtterance.onend = () => setIsSpeaking(false);
+    newUtterance.onerror = (event) => {
+      console.error('SpeechSynthesisUtterance.onerror', event);
+      setIsSpeaking(false);
+    };
 
-    // Set event handlers
-    newUtterance.onstart = () => setSpeaking(true);
-    newUtterance.onend = () => setSpeaking(false);
-    newUtterance.onpause = () => setIsPaused(true);
-    newUtterance.onresume = () => setIsPaused(false);
-
-    // Store the utterance in state
+    speechSynthesis.speak(newUtterance);
     setUtterance(newUtterance);
-    
-    // Start speaking
-    synth.speak(newUtterance);
+    setIsPaused(false);
   };
 
-  // Handle pause/resume
   const togglePause = () => {
-    const synth = window.speechSynthesis;
-    
-    if (synth.speaking) {
-      if (synth.paused) {
-        synth.resume();
-        setIsPaused(false);
+    if (utterance) {
+      if (isPaused) {
+        speechSynthesis.resume();
       } else {
-        synth.pause();
-        setIsPaused(true);
+        speechSynthesis.pause();
       }
+      setIsPaused(!isPaused);
     }
   };
 
-  // Handle stop
   const stop = () => {
-    const synth = window.speechSynthesis;
-    synth.cancel();
-    setSpeaking(false);
+    if (utterance) {
+      speechSynthesis.cancel();
+      setIsSpeaking(false);
+      setIsPaused(false);
+    }
   };
 
   return (
-    <div className="flex flex-col space-y-4 w-full max-w-2xl mx-auto p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold text-center">Text to Speech Converter</h2>
-      
-      {/* Text input area */}
-      <div className="flex flex-col space-y-2">
-        <label htmlFor="text-input" className="font-medium">Enter your text:</label>
-        <textarea
-          id="text-input"
-          className="w-full h-40 p-3 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-          placeholder="Type something here..."
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-        />
-      </div>
-      
-      {/* Voice selection */}
-      <div className="flex flex-col space-y-2">
-        <label htmlFor="voice-select" className="font-medium">Select Voice:</label>
-        <select
-          id="voice-select"
-          className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-          value={selectedVoice}
-          onChange={(e) => setSelectedVoice(e.target.value)}
-        >
-          {voices.map((voice) => (
-            <option key={voice.name} value={voice.name}>
-              {voice.name} ({voice.lang})
-            </option>
-          ))}
-        </select>
-      </div>
-      
-      {/* Control buttons */}
-      <div className="flex space-x-2 justify-center">
-        <button
-          onClick={speak}
-          disabled={!text || speaking}
-          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Listen
-        </button>
-        
-        {speaking && (
-          <>
-            <button
-              onClick={togglePause}
-              className="px-4 py-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white flex items-center justify-center p-4">
+      <div className="bg-gray-800 p-8 rounded-lg shadow-2xl w-full max-w-2xl border border-gray-700">
+        <h1 className="text-4xl font-extrabold mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">Text-to-Speech Converter</h1>
+
+        <div className="mb-6">
+          <label htmlFor="text-input" className="block text-gray-300 text-sm font-bold mb-2">Enter Text:</label>
+          <textarea
+            id="text-input"
+            className="shadow-inner appearance-none border border-gray-700 rounded w-full py-3 px-4 text-gray-200 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-500 bg-gray-900 h-32 resize-none transition duration-300 ease-in-out focus:border-transparent"
+            placeholder="Type your text here..."
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+          ></textarea>
+        </div>
+
+        <div className="mb-6">
+          <label htmlFor="voice-select" className="block text-gray-300 text-sm font-bold mb-2">Select Voice:</label>
+          <div className="relative">
+            <select
+              id="voice-select"
+              className="block appearance-none w-full bg-gray-900 border border-gray-700 text-gray-200 py-3 px-4 pr-8 rounded shadow-inner leading-tight focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-300 ease-in-out cursor-pointer"
+              value={selectedVoice ? selectedVoice.name : ''}
+              onChange={(e) => {
+                const voice = voices.find(v => v.name === e.target.value);
+                setSelectedVoice(voice || null);
+              }}
             >
-              {isPaused ? 'Resume' : 'Pause'}
-            </button>
-            
-            <button
-              onClick={stop}
-              className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
-            >
-              Stop
-            </button>
-          </>
-        )}
+              {voices.map((voice) => (
+                <option key={voice.name} value={voice.name}>
+                  {voice.name} ({voice.lang})
+                </option>
+              ))}
+            </select>
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
+              <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex justify-center space-x-4">
+          <button
+            onClick={speak}
+            disabled={isSpeaking}
+            className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+          >
+            <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 6.343a1 1 0 010 1.414L13.707 9l.95.95a1 1 0 01-1.414 1.414L12.293 10.414l-.95.95a1 1 0 01-1.414-1.414l.95-.95-.95-.95a1 1 0 011.414-1.414l.95.95.95-.95a1 1 0 011.414 0z" clipRule="evenodd"/></svg>
+            Listen
+          </button>
+          <button
+            onClick={togglePause}
+            disabled={!isSpeaking && !isPaused}
+            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+          >
+            <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd"/></svg>
+            {isPaused ? 'Resume' : 'Pause'}
+          </button>
+          <button
+            onClick={stop}
+            disabled={!isSpeaking && !isPaused}
+            className="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+          >
+            <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd"/></svg>
+            Stop
+          </button>
+        </div>
       </div>
     </div>
   );
