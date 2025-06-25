@@ -99,7 +99,6 @@ const TextToSpeech: React.FC = () => {
       </div>
       <div className="mt-8 flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6">
         <button
-          // className="w-full sm:w-auto bg-white text-indigo-700 font-bold py-3 px-6 rounded-lg shadow-md hover:bg-indigo-100 disabled:opacity-50 transition duration-300"
           className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
           onClick={speak}
           disabled={isSpeaking && !isPaused}
