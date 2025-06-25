@@ -99,12 +99,16 @@ const TextToSpeech: React.FC = () => {
       </div>
       <div className="mt-8 flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6">
         <button
-          className="w-full sm:w-auto bg-white text-indigo-700 font-bold py-3 px-6 rounded-lg shadow-md hover:bg-indigo-100 disabled:opacity-50 transition duration-300"
+          // className="w-full sm:w-auto bg-white text-indigo-700 font-bold py-3 px-6 rounded-lg shadow-md hover:bg-indigo-100 disabled:opacity-50 transition duration-300"
+          className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
           onClick={speak}
           disabled={isSpeaking && !isPaused}
           title="Listen"
         >
-          ▶️ Listen
+          <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 6.343a1 1 0 010 1.414L13.707 9l.95.95a1 1 0 01-1.414 1.414L12.293 10.414l-.95.95a1 1 0 01-1.414-1.414l.95-.95-.95-.95a1 1 0 011.414-1.414l.95.95.95-.95a1 1 0 011.414 0z" clipRule="evenodd"/>
+          </svg>
+          {isSpeaking ? 'Speaking...' : 'Listen'}
         </button>
         <button
           className="w-full sm:w-auto bg-white text-indigo-700 font-bold py-3 px-6 rounded-lg shadow-md hover:bg-indigo-100 disabled:opacity-50 transition duration-300"
