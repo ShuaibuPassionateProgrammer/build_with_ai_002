@@ -105,10 +105,6 @@ export default function TextToSpeech() {
   return (
     <div className="bg-gradient-to-br from-gray-900 to-black text-white flex items-center justify-center p-6 rounded-lg shadow-2xl w-full max-w-2xl border border-gray-700">
       <div className="w-full">
-        <h1 className="text-4xl font-extrabold mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
-          Text-to-Speech AI System
-        </h1>
-
         <div className="mb-6">
           <label htmlFor="text-input" className="block text-gray-300 text-sm font-bold mb-2">
             Enter Text:
