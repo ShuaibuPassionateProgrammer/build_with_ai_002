@@ -67,22 +67,22 @@ const TextToSpeech: React.FC = () => {
   };
 
   return (
-    <div className="max-w-xl mx-auto p-6 bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 rounded-lg shadow-lg text-white">
-      <h1 className="text-3xl font-bold mb-4 text-center">Text to Speech</h1>
+    <div className="max-w-xl mx-auto p-8 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-xl shadow-lg text-white">
+      <h1 className="text-4xl font-extrabold mb-6 text-center drop-shadow-lg">Text to Speech</h1>
       <textarea
-        className="w-full p-3 rounded-md text-black"
+        className="w-full p-4 rounded-lg text-gray-900 text-lg resize-none shadow-inner focus:outline-none focus:ring-4 focus:ring-purple-300"
         rows={6}
         placeholder="Enter text here..."
         value={text}
         onChange={(e) => setText(e.target.value)}
       />
-      <div className="mt-4">
-        <label htmlFor="voice" className="block mb-2 font-semibold">
+      <div className="mt-6">
+        <label htmlFor="voice" className="block mb-2 font-semibold text-lg">
           Select Voice:
         </label>
         <select
           id="voice"
-          className="w-full p-2 rounded-md text-black"
+          className="w-full p-3 rounded-lg text-gray-900 text-lg shadow-inner focus:outline-none focus:ring-4 focus:ring-purple-300"
           value={selectedVoice}
           onChange={handleVoiceChange}
         >
@@ -93,30 +93,30 @@ const TextToSpeech: React.FC = () => {
           ))}
         </select>
       </div>
-      <div className="mt-6 flex justify-center space-x-4">
+      <div className="mt-8 flex justify-center space-x-6">
         <button
-          className="bg-white text-purple-700 font-bold py-2 px-4 rounded hover:bg-purple-100 disabled:opacity-50"
+          className="bg-white text-indigo-700 font-bold py-3 px-6 rounded-lg shadow-md hover:bg-indigo-100 disabled:opacity-50 transition duration-300"
           onClick={speak}
           disabled={isSpeaking && !isPaused}
           title="Listen"
         >
-          ▶️
+          ▶️ Listen
         </button>
         <button
-          className="bg-white text-purple-700 font-bold py-2 px-4 rounded hover:bg-purple-100 disabled:opacity-50"
+          className="bg-white text-indigo-700 font-bold py-3 px-6 rounded-lg shadow-md hover:bg-indigo-100 disabled:opacity-50 transition duration-300"
           onClick={togglePause}
           disabled={!isSpeaking}
           title={isPaused ? "Resume" : "Pause"}
         >
-          {isPaused ? '▶️' : '⏸️'}
+          {isPaused ? '▶️ Resume' : '⏸️ Pause'}
         </button>
         <button
-          className="bg-white text-purple-700 font-bold py-2 px-4 rounded hover:bg-purple-100 disabled:opacity-50"
+          className="bg-white text-indigo-700 font-bold py-3 px-6 rounded-lg shadow-md hover:bg-indigo-100 disabled:opacity-50 transition duration-300"
           onClick={stop}
           disabled={!isSpeaking}
           title="Stop"
         >
-          ⏹️
+          ⏹️ Stop
         </button>
       </div>
     </div>
